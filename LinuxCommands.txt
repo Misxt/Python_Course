@@ -1,0 +1,5 @@
+cd foldername - Enters a foldername
+cd .. - exits the current foldername
+pip install packagename - How to install a package
+pip uninstall packagename - How to uninstall a package
+python3 filename.py - Run a PythonScript WHILE YOU ARE IN THE SAME FOLDER

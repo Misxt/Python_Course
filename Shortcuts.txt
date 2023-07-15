@@ -1,0 +1,3 @@
+crtl k + c comments everything selected
+ctrl k + u uncomments everything selected
+crtl c ONLY IN THE TERMINAL stops the code
