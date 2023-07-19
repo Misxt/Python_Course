@@ -6,6 +6,12 @@ class Manager:
     def add_table(self, table):
         self.tables.append(table)
 
+    def remove_table(self, tablenumber):
+        for i in range(len(self.tables)):
+            if self.tables[i].table_number == tablenumber:
+                self.tables.pop(i)
+                break
+
     def get_free_table(self, group):
         """
         Picks a free table to be considered for seating (Depending on the number of adults and children)
