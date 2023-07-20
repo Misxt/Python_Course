@@ -18,7 +18,7 @@ def main():
             children = int(input("How many children are in this group? "))
             group1 = Group(adults, children)
             seated_table_number = manager1.receive_group(group1, menu)
-            if seated_table_number is not -1:
+            if seated_table_number != -1:
                 print(f"Please take a seat at table {seated_table_number}")
             else:
                 print("Sorry, the restrurant is too full at the moment")
@@ -34,5 +34,6 @@ def main():
             break
         else:
             print("Not a valid option")
-main()
+if __name__ == "__main__":
+    main()
 #Homework: Read and understand the minecraft menu
