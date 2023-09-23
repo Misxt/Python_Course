@@ -40,26 +40,38 @@ class VideosDataBase:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Video {id} not found")
         self.videos.pop(id)
 
+    def all_owner_videos(self, owner):
+        return_list = []
+        for id in self.videos:
+            if self.videos[id].owner == owner:
+                return_list.append(self.videos[id])
+        return return_list
+
+
 
 videos_database = VideosDataBase()
 videos_database.create("Me at the zoo", 2, "Asa")
 videos_database.create("Test", 99, "Luciano")
 
 @app.post("/video", status_code=status.HTTP_201_CREATED)
-def create_user(name:str, duration:float, owner:str):
+def create_video(name:str, duration:float, owner:str):
     id = videos_database.create(name, duration, owner)
     return id
 
 @app.get("/video/{id}", status_code=status.HTTP_200_OK)
-def get_user(id:int):
+def get_video(id:int):
     return videos_database.read(id)
 
-@app.put("/user/{id}", status_code=status.HTTP_202_ACCEPTED)
-def update_user(id:int, name:str, duration:float, owner:str):
+@app.put("/video/{id}", status_code=status.HTTP_202_ACCEPTED)
+def update_video(id:int, name:str, duration:float, owner:str):
     videos_database.update(id, name, duration, owner)
 
-@app.delete("/user/{id}", status_code=status.HTTP_202_ACCEPTED)
-def delete_user(id:int):
+@app.delete("/video/{id}", status_code=status.HTTP_202_ACCEPTED)
+def delete_video(id:int):
     videos_database.delete(id)
+
+@app.get("/video/owner/{owner}", status_code=status.HTTP_200_OK)
+def all_vids_by_owner(owner:str):
+    return videos_database.all_owner_videos(owner)
     
 #adasedwqqdasdqwwasqFastAP
