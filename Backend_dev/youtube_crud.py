@@ -7,6 +7,7 @@ Optional: Create an extra endpoint to do something (Like get all videos by certi
 """
 #Run command: uvicorn youtube_crud:app --reload
 from fastapi import FastAPI, status, HTTPException
+from fastapi.responses import HTMLResponse
 
 app = FastAPI()
 
@@ -15,6 +16,10 @@ class Video:
         self.name = name
         self.duration = duration
         self.owner = owner
+    
+    def to_dictionary(self):
+        dictionary = {"name":self.name, "duration":self.duration, "owner":self.owner}
+        return dictionary
 
 class VideosDataBase:
     def __init__(self) -> None:
@@ -70,8 +75,71 @@ def update_video(id:int, name:str, duration:float, owner:str):
 def delete_video(id:int):
     videos_database.delete(id)
 
-@app.get("/video/owner/{owner}", status_code=status.HTTP_200_OK)
-def all_vids_by_owner(owner:str):
-    return videos_database.all_owner_videos(owner)
+@app.get("/video/owner/{owner}", response_class=HTMLResponse, status_code=status.HTTP_200_OK)
+def all_vids_by_owner(owner: str):
+    data = videos_database.all_owner_videos(owner)
+    
+    # Convert JSON data to an HTML table with CSS styling
+    table_html = """
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 80%;
+            margin: 20px auto;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Duration</th>
+            <th>Owner</th>
+        </tr>
+    """
+
+    for item in data:
+        table_html += f"""
+        <tr>
+            <td>{item.name}</td>
+            <td>{item.duration}</td>
+            <td>{item.owner}</td>
+        </tr>
+        """
+
+    table_html += "</table>"
+
+    # Embed the HTML table into your response
+    return f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Video List</title>
+    </head>
+    <body>
+        <h1>Videos by Owner: {owner}</h1>
+        {table_html}
+    </body>
+    </html>
+    """
+
+@app.get("/", response_class=HTMLResponse)
+async def read_items():
+    return """
+    <html>
+        <head>
+            <title>Some HTML in here</title>
+        </head>
+        <body>
+            <h1>Look ma! HTML!</h1>
+        </body>
+    </html>
+    """
     
 #adasedwqqdasdqwwasqFastAP
